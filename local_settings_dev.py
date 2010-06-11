@@ -1,7 +1,7 @@
 # Local settings for development
 
 from os.path import dirname, join, normpath
-db_dir = normpath(join(dirname(__file__), ".."))
+db_dir = normpath(dirname(__file__))
 db_file = join(db_dir, "dev.db")
 
 DATABASE_ENGINE = 'sqlite3'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
