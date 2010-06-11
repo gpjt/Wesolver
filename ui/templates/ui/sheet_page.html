@@ -3,30 +3,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Wesolver: [{{ user.username }}] {{ sheet.name }}</title>
 
-    <!-- ** CSS ** -->
-    <!-- base library -->
     <link rel="stylesheet" type="text/css" href="/ext-js/resources/css/ext-all.css" />
 
-    <!-- overrides to base library -->
-
-    <!-- page specific -->
-    <link rel="stylesheet" type="text/css" href="/ext-js/examples/shared/examples.css" />
-    <link rel="stylesheet" type="text/css" href="/ext-js/examples/grid/grid-examples.css" />
-
-    <style type="text/css">
-
-    </style>
-
-    <!-- ** Javascript ** -->
-    <!-- ExtJS library: base/adapter -->
     <script type="text/javascript" src="/ext-js/adapter/ext/ext-base.js"></script>
-
-    <!-- ExtJS library: all widgets -->
     <script type="text/javascript" src="/ext-js/ext-all-debug.js"></script>
-
-    <!-- overrides to base library -->
-
-    <!-- page specific -->
 
     <script type="text/javascript">
       Ext.BLANK_IMAGE_URL = '/ext-js/resources/images/default/s.gif';
@@ -90,16 +70,6 @@
 </head>
 <body>
     <h1>{{ sheet.name }}</h1>
-
-    <!-- the custom editor for the 'Light' column references the id="light" -->
-    <select name="light" id="light" style="display: none;">
-      <option value="Shade">Shade</option>
-      <option value="Mostly Shady">Mostly Shady</option>
-      <option value="Sun or Shade">Sun or Shade</option>
-
-      <option value="Mostly Sunny">Mostly Sunny</option>
-      <option value="Sunny">Sunny</option>
-    </select>
 
     <div id="editor-grid"></div>
 </body>
