@@ -12,9 +12,19 @@ def user_page(request, username):
 
 
 
-def sheet_page(request, username, sheet_id):
+def get_user_sheet(username, sheet_id):
     user = get_object_or_404(User, username=username)
     sheet = get_object_or_404(Spreadsheet, pk=sheet_id)
     if sheet.owner != user:
         raise Http404
+    return user, sheet
+    
+
+def sheet_page(request, username, sheet_id):
+    user, sheet = get_user_sheet(username, sheet_id)
     return render_to_response('ui/sheet_page.html', { 'user' : user, 'sheet' : sheet})
+    
+    
+def sheet_json(request, username, sheet_id):
+    _, sheet = get_user_sheet(username, sheet_id)
+    return render_to_response('ui/sheet_json.html', { 'sheet' : sheet})

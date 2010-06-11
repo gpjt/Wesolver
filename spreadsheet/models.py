@@ -10,6 +10,9 @@ class Spreadsheet(models.Model):
     name = models.CharField(max_length=255)
 
     contents = models.TextField()
+    
+    def json(self):
+        return "{ 'width': 10, 'height': 10, 'cells': {} }"
 
     def __unicode__(self):
         return "[%s] %s" % (self.owner, self.name)

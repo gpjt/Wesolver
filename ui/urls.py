@@ -10,10 +10,17 @@ urlpatterns = patterns('wesolver.ui.views',
     ),
 
     url(
-        r'^(?P<username>[^/]+)/(?P<sheet_id>\d+)$',
+        r'^(?P<username>[^/]+)/(?P<sheet_id>\d+)/$',
         'sheet_page',
         {},
         name="show-sheet"
+    ),
+
+    url(
+        r'^(?P<username>[^/]+)/(?P<sheet_id>\d+)/json$',
+        'sheet_json',
+        {},
+        name="sheet-json"
     ),
 
 )
