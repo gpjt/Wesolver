@@ -7,7 +7,7 @@
 
 <ul>
     {% for sheet in sheets.all %}
-        <li>{{ sheet.name }}
+        <li><a href="{% url show-sheet user.username sheet.id %}">{{ sheet.name }}</a>
     {% endfor %}
 </ul>
 
