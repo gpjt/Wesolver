@@ -1,0 +1,17 @@
+<h1>Details for {{ user.username }}</h1>
+
+
+<h2>Spreadheets</h2>
+
+{% if sheets %}
+
+<ul>
+    {% for sheet in sheets.all %}
+        <li>{{ sheet.name }}
+    {% endfor %}
+</ul>
+
+{% else %}
+<p>
+No sheets found.
+{% endif %}

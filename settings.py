@@ -69,6 +69,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'wesolver.ui',
+    'wesolver.spreadsheet',
 )
 
 from local_settings import *
