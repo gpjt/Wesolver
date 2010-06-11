@@ -49,7 +49,6 @@ SECRET_KEY = 'ynygfo5y0q@!c+b79%wgpr$7o-qu585z+!*@8jpc_ua0(c&i$u'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.load_template_source',
     'django.template.loaders.app_directories.load_template_source',
-#     'django.template.loaders.eggs.load_template_source',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -61,9 +60,6 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'wesolver.urls'
 
 TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
 )
 
 INSTALLED_APPS = (
@@ -72,6 +68,7 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
+    'wesolver.ui',
 )
 
 from local_settings import *
