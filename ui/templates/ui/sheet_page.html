@@ -58,9 +58,9 @@
               store: store,
               columns: cols,
               renderTo: 'editor-grid',
-              width: 600,
-              height: 300,
               frame: true,
+              height: 800,
+              width: 600,
               clicksToEdit: 1,
           });
 
@@ -71,6 +71,58 @@
 <body>
     <h1>{{ sheet.name }}</h1>
 
-    <div id="editor-grid"></div>
+    <table width="100%">
+      <tr>
+        <td width="50%" height="800px" valign="top">
+          <div id="editor-grid"></div>
+        </td>
+
+        <td width="50%" valign="top">
+          <table width="100%">
+            <tr>
+              <td width="100%">
+                Header code<br/>
+                <textarea rows="3" style="width: 100%">
+                </textarea>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Pre-constants user code<br/>
+                <textarea rows="8"  style="width: 100%">
+                </textarea>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Constants and formatting<br/>
+                <textarea rows="3" style="width: 100%">
+                </textarea>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Pre-formula user code<br/>
+                <textarea rows="8" style="width: 100%">
+                </textarea>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Formulae<br/>
+                <textarea rows="3" style="width: 100%">
+                </textarea>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Post-formula user code code<br/>
+                <textarea rows="8" style="width: 100%">
+                </textarea>
+              </td>
+            </tr>
+          </table>
+        </td>
+    </table>
 </body>
 </html>
