@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.shortcuts import render_to_response, get_object_or_404
 
 from wesolver.spreadsheet.models import Spreadsheet
@@ -27,4 +27,4 @@ def sheet_page(request, username, sheet_id):
     
 def sheet_json(request, username, sheet_id):
     _, sheet = get_user_sheet(username, sheet_id)
-    return render_to_response('ui/sheet_json.html', { 'sheet' : sheet})
+    return HttpResponse(sheet.json())
