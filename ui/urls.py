@@ -23,4 +23,11 @@ urlpatterns = patterns('wesolver.ui.views',
         name="sheet-json"
     ),
 
+    url(
+        r'^(?P<username>[^/]+)/(?P<sheet_id>\d+)/update$',
+        'sheet_update',
+        {},
+        name="sheet-update"
+    ),
+
 )

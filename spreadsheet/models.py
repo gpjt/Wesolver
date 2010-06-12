@@ -1,3 +1,5 @@
+import pickle
+
 from django.db import models
 
 from django.contrib.auth.models import User
@@ -24,10 +26,21 @@ class Spreadsheet(models.Model):
     name = models.CharField(max_length=255)
 
     contents = models.TextField()
-    
+
 
     def worksheet(self):
-        return Worksheet({ (1, 1) : 10, (2, 2): "hello" })
+        dict = {}
+        if self.contents and not self.contents == ".":
+            dict = pickle.loads(self.contents)
+        return Worksheet(dict)
+
+
+    def update(self, (col, row), value):
+        worksheet = self.worksheet()
+        worksheet.dict[col, row] = value
+        self.contents = pickle.dumps(worksheet.dict, 0)
+        print self.contents
+        print pickle.loads(self.contents)
 
 
     def json(self):
@@ -39,6 +52,8 @@ class Spreadsheet(models.Model):
                 cols.append('"%s"' % (worksheet.dict.get((col, row), "")))
             rows.append("[" + ",".join(cols) + "]")
         return "[" + ",\n".join(rows) + "]"
+
+
 
 
     def __unicode__(self):

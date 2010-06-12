@@ -28,3 +28,13 @@ def sheet_page(request, username, sheet_id):
 def sheet_json(request, username, sheet_id):
     _, sheet = get_user_sheet(username, sheet_id)
     return HttpResponse(sheet.json())
+    
+    
+def sheet_update(request, username, sheet_id):
+    _, sheet = get_user_sheet(username, sheet_id)
+    col = int(request.GET["col"])
+    row = int(request.GET["row"])
+    value = request.GET["value"]
+    sheet.update((col, row), value)
+    sheet.save()
+    return HttpResponse("")
