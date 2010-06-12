@@ -9,74 +9,82 @@
     <script type="text/javascript" src="/ext-js/ext-all-debug.js"></script>
 
     <script type="text/javascript">
-      Ext.BLANK_IMAGE_URL = '/ext-js/resources/images/default/s.gif';
+        Ext.BLANK_IMAGE_URL = '/ext-js/resources/images/default/s.gif';
 
-      Ext.onReady(function(){
+        Ext.onReady(function(){
 
-          cols = [
-            new Ext.grid.RowNumberer(),
-            { id: "A", header: "A", dataIndex: "A", width: 220, editor: new Ext.form.TextField() },
-            { id: "B", header: "B", dataIndex: "B", width: 220, editor: new Ext.form.TextField() },
-            { id: "C", header: "C", dataIndex: "C", width: 220, editor: new Ext.form.TextField() },
-            { id: "D", header: "D", dataIndex: "D", width: 220, editor: new Ext.form.TextField() },
-            { id: "E", header: "E", dataIndex: "E", width: 220, editor: new Ext.form.TextField() },
-            { id: "F", header: "F", dataIndex: "F", width: 220, editor: new Ext.form.TextField() },
-            { id: "G", header: "G", dataIndex: "G", width: 220, editor: new Ext.form.TextField() },
-            { id: "H", header: "H", dataIndex: "H", width: 220, editor: new Ext.form.TextField() },
-            { id: "I", header: "I", dataIndex: "I", width: 220, editor: new Ext.form.TextField() },
-            { id: "J", header: "J", dataIndex: "J", width: 220, editor: new Ext.form.TextField() },
-          ];
+            var cols = [
+                new Ext.grid.RowNumberer(),
+                { id: "A", header: "A", dataIndex: "A", width: 75, editor: new Ext.form.TextField() },
+                { id: "B", header: "B", dataIndex: "B", width: 75, editor: new Ext.form.TextField() },
+                { id: "C", header: "C", dataIndex: "C", width: 75, editor: new Ext.form.TextField() },
+                { id: "D", header: "D", dataIndex: "D", width: 75, editor: new Ext.form.TextField() },
+                { id: "E", header: "E", dataIndex: "E", width: 75, editor: new Ext.form.TextField() },
+                { id: "F", header: "F", dataIndex: "F", width: 75, editor: new Ext.form.TextField() },
+                { id: "G", header: "G", dataIndex: "G", width: 75, editor: new Ext.form.TextField() },
+                { id: "H", header: "H", dataIndex: "H", width: 75, editor: new Ext.form.TextField() },
+                { id: "I", header: "I", dataIndex: "I", width: 75, editor: new Ext.form.TextField() },
+                { id: "J", header: "J", dataIndex: "J", width: 75, editor: new Ext.form.TextField() },
+            ];
 
-          var store = new Ext.data.ArrayStore({
-              // destroy the store if the grid is destroyed
-              autoDestroy: true,
+            var store = new Ext.data.ArrayStore({
+                // destroy the store if the grid is destroyed
+                autoDestroy: true,
 
-              fields: [
-                {name: "A"},
-                {name: "B"},
-                {name: "C"},
-                {name: "D"},
-                {name: "E"},
-                {name: "F"},
-                {name: "G"},
-                {name: "H"},
-                {name: "I"},
-                {name: "J"},
-              ]
-          });
-
-
-          var grid = new Ext.grid.EditorGridPanel({
-              store: store,
-              columns: cols,
-              renderTo: 'editor-grid',
-              frame: true,
-              height: 800,
-              width: 600,
-              clicksToEdit: 1,
-          });
-
-          function on_loaded_json(json) {
-            alert(json);
-            data = JSON.parse(json);
-            alert(data);
-            store.loadData(data);
-          }
+                fields: [
+                    {name: "A"},
+                    {name: "B"},
+                    {name: "C"},
+                    {name: "D"},
+                    {name: "E"},
+                    {name: "F"},
+                    {name: "G"},
+                    {name: "H"},
+                    {name: "I"},
+                    {name: "J"},
+                ],
+            });
 
 
-          function load_sheet_json() {
-            var request = new XMLHttpRequest();
-            request.open("GET", "json");
-            request.onreadystatechange = function() {
-              if (request.readyState == 4) {
-                on_loaded_json(request.responseText);
-              }
+            var grid = new Ext.grid.EditorGridPanel({
+                store: store,
+                columns: cols,
+                renderTo: 'editor-grid',
+                frame: true,
+                height: 800,
+                width: 600,
+                clicksToEdit: 1,
+            });
+
+            function onAfterEdit(e) {
+                var col = e.column;
+                var row = e.row + 1;
+                var value = e.value;
+
             }
-            request.send();
-          }
 
-          load_sheet_json();
-      });
+            grid.on('afteredit', onAfterEdit);
+
+
+            function on_loaded_json(json) {
+                var data = JSON.parse(json);
+                store.loadData(data);
+            }
+
+
+            function load_sheet_json() {
+                var request = new XMLHttpRequest();
+                request.open("GET", "json");
+                request.onreadystatechange = function() {
+                    if (request.readyState == 4) {
+                        on_loaded_json(request.responseText);
+                    }
+                }
+                request.send();
+            }
+
+            load_sheet_json();
+        });
 
 
     </script>

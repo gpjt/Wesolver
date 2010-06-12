@@ -7,8 +7,8 @@ from django.contrib.auth.models import User
 class Worksheet(object):
     def __init__(self, dict):
         self.dict = dict
-        self.max_col = 0
-        self.max_row = 0
+        self.max_col = 10
+        self.max_row = 10
         for (col, row) in self.dict:
             if col > self.max_col:
                 self.max_col = col
