@@ -37,7 +37,10 @@ class Spreadsheet(models.Model):
 
     def update(self, (col, row), value):
         worksheet = self.worksheet()
-        worksheet.dict[col, row] = value
+        if value == '':
+            del worksheet.dict[col, row]
+        else:
+            worksheet.dict[col, row] = value
         self.contents = str(worksheet.dict)
 
 
