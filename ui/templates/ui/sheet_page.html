@@ -56,6 +56,7 @@
                 clicksToEdit: 1,
             });
 
+
             function onAfterEdit(e) {
                 var col = e.column;
                 var row = e.row + 1;
@@ -66,8 +67,15 @@
                 request.send();
                 load_sheet_json();
             }
-
             grid.on('afteredit', onAfterEdit);
+
+
+            function onBeforeEdit(e) {
+                var col = e.column;
+                var row = e.row + 1;
+                e.record.set(String.fromCharCode(e.column + 64), "foo");
+            }
+            grid.on('beforeedit', onBeforeEdit);
 
 
             function on_loaded_json(json) {
