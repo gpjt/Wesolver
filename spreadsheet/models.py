@@ -31,16 +31,14 @@ class Spreadsheet(models.Model):
     def worksheet(self):
         dict = {}
         if self.contents and not self.contents == ".":
-            dict = pickle.loads(self.contents)
+            dict = eval(self.contents)
         return Worksheet(dict)
 
 
     def update(self, (col, row), value):
         worksheet = self.worksheet()
         worksheet.dict[col, row] = value
-        self.contents = pickle.dumps(worksheet.dict, 0)
-        print self.contents
-        print pickle.loads(self.contents)
+        self.contents = str(worksheet.dict)
 
 
     def json(self):

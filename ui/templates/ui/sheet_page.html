@@ -62,7 +62,6 @@
                 var value = e.value;
                 var request = new XMLHttpRequest();
                 var url = "update?row=" + escape(row) + "&col=" + escape(col) + "&value=" + escape(value);
-                alert("Pinging " + url);
                 request.open("GET", url, false);
                 request.send();
                 load_sheet_json();
