@@ -37,7 +37,7 @@ class Worksheet(object):
 
         formula = "worksheet[%s] = " % (location, )
         while True:
-            match = re.match(CELLREF_RE, expression)
+            match = re.search(CELLREF_RE, expression)
             if not match:
                 break
 
