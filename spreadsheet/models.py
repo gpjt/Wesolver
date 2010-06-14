@@ -1,8 +1,13 @@
 import json
+import re
 
 from django.db import models
 
 from django.contrib.auth.models import User
+
+
+FLOAT_RE = r'(?:[0-9]*\.[0-9]+|[0-9]+\.[0-9]*)'
+CELLREF_RE = r'\$?[A-Za-z]+\$?[1-9][0-9]*'
 
 
 class Worksheet(object):
@@ -30,6 +35,8 @@ class Worksheet(object):
             if v.startswith("="):
                 expressions.append((k, v))
             else:
+                if not re.match(FLOAT_RE, v):
+                    v = "'%s'" % v
                 constants.append("worksheet[%s] = %s" % (k, v))
         self.constants_and_formatting = "\n".join(constants)
         exec(self.constants_and_formatting, context)
