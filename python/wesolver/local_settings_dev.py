@@ -1,9 +1,13 @@
 # Local settings for development
 
 from os.path import dirname, join, normpath
-PYTHON_ROOT_DIR = normpath(dirname(__file__))
-TOP_ROOT_DIR = join("..", PYTHON_ROOT_DIR)
+
+MY_DIR = dirname(__file__)
+PYTHON_ROOT_DIR = normpath(join(MY_DIR, ".."))
+TOP_ROOT_DIR = normpath(join(PYTHON_ROOT_DIR, ".."))
+
 DB_FILE = join(PYTHON_ROOT_DIR, "dev.db")
+
 
 DATABASE_ENGINE = 'sqlite3'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
 DATABASE_NAME = DB_FILE               # Or path to database file if using sqlite3.
