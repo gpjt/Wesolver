@@ -18,23 +18,27 @@ def get_user_sheet(username, sheet_id):
     if sheet.owner != user:
         raise Http404
     return user, sheet
-    
+
 
 def sheet_page(request, username, sheet_id):
     user, sheet = get_user_sheet(username, sheet_id)
     return render_to_response('ui/sheet_page.html', { 'user' : user, 'sheet' : sheet})
-    
-    
+
+
 def sheet_json(request, username, sheet_id):
     _, sheet = get_user_sheet(username, sheet_id)
     return HttpResponse(sheet.json())
-    
-    
+
+
 def sheet_update(request, username, sheet_id):
     _, sheet = get_user_sheet(username, sheet_id)
-    col = int(request.GET["col"])
-    row = int(request.GET["row"])
     value = request.GET["value"]
-    sheet.update((col, row), value)
+    section = request.GET.get("section")
+    if section:
+        sheet.update_user_code(section, value)
+    else:
+        col = int(request.GET["col"])
+        row = int(request.GET["row"])
+        sheet.update((col, row), value)
     sheet.save()
     return HttpResponse("")

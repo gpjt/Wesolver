@@ -57,7 +57,7 @@
             });
 
 
-            function onAfterEdit(e) {
+            function on_after_edit(e) {
                 var col = e.column;
                 var row = e.row + 1;
                 var value = e.value;
@@ -67,24 +67,27 @@
                 request.send();
                 load_sheet_json();
             }
-            grid.on('afteredit', onAfterEdit);
+            grid.on('afteredit', on_after_edit);
 
 
-            function onBeforeEdit(e) {
+            function on_before_edit(e) {
                 var col = e.column - 1;
                 var row = e.row;
                 e.record.set(String.fromCharCode(e.column + 64), data["model"][row][col]);
                 e.record.markDirty();
             }
-            grid.on('beforeedit', onBeforeEdit);
+            grid.on('beforeedit', on_before_edit);
 
             var data;
             function on_loaded_json(json) {
                 data = JSON.parse(json);
                 store.loadData(data["result"]);
-                document.getElementById("header_code").value = data["header_code"]
-                document.getElementById("constants_and_formatting").value = data["constants_and_formatting"]
-                document.getElementById("formulae").value = data["formulae"]
+                document.getElementById("header_code").value = data["header_code"];
+                document.getElementById("constants_and_formatting").value = data["constants_and_formatting"];
+                document.getElementById("formulae").value = data["formulae"];
+                document.getElementById("pre_constants_user_code").value = data["pre_constants_user_code"];
+                document.getElementById("pre_formula_user_code").value = data["pre_formula_user_code"];
+                document.getElementById("post_formula_user_code").value = data["post_formula_user_code"];
             }
 
 
@@ -101,6 +104,15 @@
 
             load_sheet_json();
         });
+
+
+        function on_usercode_change(section) {
+            var request = new XMLHttpRequest();
+            var url = "update?section=" + encodeURIComponent(section) + "&value=" + encodeURIComponent(document.getElementById(section).value);
+            request.open("GET", url, false);
+            request.send();
+            load_sheet_json();
+        }
 
 
     </script>
@@ -120,43 +132,37 @@
             <tr>
               <td width="100%">
                 Header code<br/>
-                <textarea id="header_code" rows="3" style="width: 100%">
-                </textarea>
+                <textarea id="header_code" rows="3" style="width: 100%" disabled></textarea>
               </td>
             </tr>
             <tr>
-              <td>
-                Pre-constants user code<br/>
-                <textarea rows="8"  style="width: 100%">
-                </textarea>
-              </td>
+                <td>
+                    Pre-constants user code<br/>
+                    <textarea id="pre_constants_user_code" rows="8" onchange="on_usercode_change('pre_constants_user_code');" style="width: 100%"></textarea>
+                </td>
             </tr>
             <tr>
               <td>
                 Constants and formatting<br/>
-                <textarea id="constants_and_formatting" rows="3" style="width: 100%">
-                </textarea>
+                <textarea id="constants_and_formatting" rows="3" style="width: 100%" disabled></textarea>
               </td>
             </tr>
             <tr>
               <td>
                 Pre-formula user code<br/>
-                <textarea rows="8" style="width: 100%">
-                </textarea>
+                <textarea id="pre_formula_user_code" rows="8"  onchange="on_usercode_change('pre_formula_user_code');"style="width: 100%"></textarea>
               </td>
             </tr>
             <tr>
               <td>
                 Formulae<br/>
-                <textarea id="formulae" rows="3" style="width: 100%">
-                </textarea>
+                <textarea id="formulae" rows="3" style="width: 100%" disabled></textarea>
               </td>
             </tr>
             <tr>
               <td>
                 Post-formula user code code<br/>
-                <textarea rows="8" style="width: 100%">
-                </textarea>
+                <textarea id="post_formula_user_code" rows="8"  onchange="on_usercode_change('post_formula_user_code');"style="width: 100%"></textarea>
               </td>
             </tr>
           </table>

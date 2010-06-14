@@ -16,11 +16,13 @@ class Worksheet(object):
             if row > self.max_row:
                 self.max_row = row
 
-    def recalc(self):
+    def recalc(self, pre_constants_user_code, pre_formula_user_code, post_formula_user_code):
         context = {}
 
         self.header_code = "worksheet = {}"
         exec(self.header_code, context)
+
+        exec(pre_constants_user_code, context)
 
         constants = []
         expressions = []
@@ -31,6 +33,8 @@ class Worksheet(object):
                 constants.append("worksheet[%s] = %s" % (k, v))
         self.constants_and_formatting = "\n".join(constants)
         exec(self.constants_and_formatting, context)
+
+        exec(pre_formula_user_code, context)
 
         formulae = []
         for k, v in expressions:
@@ -43,6 +47,8 @@ class Worksheet(object):
                 context["worksheet"][k] = "#ERR"
         self.formulae = "\n".join(formulae)
 
+        exec(post_formula_user_code, context)
+
         self.results = context["worksheet"]
         print "Spreadsheet recalculated, results are %s" % self.results
 
@@ -54,12 +60,19 @@ class Spreadsheet(models.Model):
 
     name = models.CharField(max_length=255)
 
-    contents = models.TextField()
+    contents = models.TextField(blank=True)
+
+    pre_constants_user_code = models.TextField(blank=True)
+
+    pre_formula_user_code = models.TextField(blank=True)
+
+    post_formula_user_code = models.TextField(blank=True)
+
 
 
     def worksheet(self):
         model = {}
-        if self.contents and not self.contents == ".":
+        if self.contents:
             model = eval(self.contents)
         return Worksheet(model)
 
@@ -73,9 +86,18 @@ class Spreadsheet(models.Model):
         self.contents = str(worksheet.model)
 
 
+    def update_user_code(self, section, value):
+        if section == "pre_constants_user_code":
+            self.pre_constants_user_code = value
+        elif section == "pre_formula_user_code":
+            self.pre_formula_user_code = value
+        elif section == "post_formula_user_code":
+            self.post_formula_user_code = value
+
+
     def json(self):
         worksheet = self.worksheet()
-        worksheet.recalc()
+        worksheet.recalc(self.pre_constants_user_code, self.pre_formula_user_code, self.post_formula_user_code)
         modelRows = []
         resultRows = []
         for row in range(1, worksheet.max_row + 1):
@@ -91,7 +113,10 @@ class Spreadsheet(models.Model):
             "result" : resultRows,
             "header_code" : worksheet.header_code,
             "constants_and_formatting" : worksheet.constants_and_formatting,
-            "formulae" : worksheet.formulae
+            "formulae" : worksheet.formulae,
+            "pre_constants_user_code" : self.pre_constants_user_code,
+            "pre_formula_user_code" : self.pre_formula_user_code,
+            "post_formula_user_code" : self.post_formula_user_code,
         }
 
         return json.dumps(jsonObject)
