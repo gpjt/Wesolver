@@ -5,17 +5,41 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-
 class Worksheet(object):
-    def __init__(self, dict):
-        self.dict = dict
+    def __init__(self, model):
+        self.model = model
         self.max_col = 10
         self.max_row = 10
-        for (col, row) in self.dict:
+        for (col, row) in self.model:
             if col > self.max_col:
                 self.max_col = col
             if row > self.max_row:
                 self.max_row = row
+
+    def recalc(self):
+        context = {}
+
+        self.header_code = "worksheet = {}"
+        exec(self.header_code, context)
+
+        constants = []
+        expressions = []
+        for k, v in self.model.items():
+            if v.startswith("="):
+                expressions.append((k, v))
+            else:
+                constants.append("worksheet[%s] = %s" % (k, v))
+        self.constants_and_formatting = "\n".join(constants)
+        exec(self.constants_and_formatting, context)
+
+        formulae = []
+        for k, v in expressions:
+            formulae.append("worksheet[%s] = %s" % (k, v[1:]))
+        self.formulae = "\n".join(formulae)
+        exec(self.formulae, context)
+
+        self.results = context["worksheet"]
+        print "Spreadsheet recalculated, results are %s" % self.results
 
 
 
@@ -29,30 +53,35 @@ class Spreadsheet(models.Model):
 
 
     def worksheet(self):
-        dict = {}
+        model = {}
         if self.contents and not self.contents == ".":
-            dict = eval(self.contents)
-        return Worksheet(dict)
+            model = eval(self.contents)
+        return Worksheet(model)
 
 
     def update(self, (col, row), value):
         worksheet = self.worksheet()
         if value == '':
-            del worksheet.dict[col, row]
+            del worksheet.model[col, row]
         else:
-            worksheet.dict[col, row] = value
-        self.contents = str(worksheet.dict)
+            worksheet.model[col, row] = value
+        self.contents = str(worksheet.model)
 
 
     def json(self):
         worksheet = self.worksheet()
-        rows = []
+        worksheet.recalc()
+        modelRows = []
+        resultRows = []
         for row in range(1, worksheet.max_row + 1):
-            cols = []
+            modelCols = []
+            resultCols = []
             for col in range(1, worksheet.max_col + 1):
-                cols.append('"%s"' % (worksheet.dict.get((col, row), "")))
-            rows.append("[" + ",".join(cols) + "]")
-        return "[" + ",\n".join(rows) + "]"
+                modelCols.append('"%s"' % (worksheet.model.get((col, row), "")))
+                resultCols.append('"%s"' % (worksheet.results.get((col, row), "")))
+            modelRows.append("[" + ",".join(modelCols) + "]")
+            resultRows.append("[" + ",".join(resultCols) + "]")
+        return '{ "model": [' + ",\n".join(modelRows) + '], "result": [' + ",\n".join(resultRows) + '] }'
 
 
 

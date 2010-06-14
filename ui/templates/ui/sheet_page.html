@@ -62,7 +62,7 @@
                 var row = e.row + 1;
                 var value = e.value;
                 var request = new XMLHttpRequest();
-                var url = "update?row=" + escape(row) + "&col=" + escape(col) + "&value=" + escape(value);
+                var url = "update?row=" + encodeURIComponent(row) + "&col=" + encodeURIComponent(col) + "&value=" + encodeURIComponent(value);
                 request.open("GET", url, false);
                 request.send();
                 load_sheet_json();
@@ -71,16 +71,17 @@
 
 
             function onBeforeEdit(e) {
-                var col = e.column;
-                var row = e.row + 1;
-                e.record.set(String.fromCharCode(e.column + 64), "foo");
+                var col = e.column - 1;
+                var row = e.row;
+                e.record.set(String.fromCharCode(e.column + 64), data["model"][row][col]);
+                e.record.markDirty();
             }
             grid.on('beforeedit', onBeforeEdit);
 
-
+            var data;
             function on_loaded_json(json) {
-                var data = JSON.parse(json);
-                store.loadData(data);
+                data = JSON.parse(json);
+                store.loadData(data["result"]);
             }
 
 
