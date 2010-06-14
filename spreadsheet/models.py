@@ -1,4 +1,4 @@
-import pickle
+import json
 
 from django.db import models
 
@@ -82,13 +82,19 @@ class Spreadsheet(models.Model):
             modelCols = []
             resultCols = []
             for col in range(1, worksheet.max_col + 1):
-                modelCols.append('"%s"' % (worksheet.model.get((col, row), "")))
-                resultCols.append('"%s"' % (worksheet.results.get((col, row), "")))
-            modelRows.append("[" + ",".join(modelCols) + "]")
-            resultRows.append("[" + ",".join(resultCols) + "]")
-        return '{ "model": [' + ",\n".join(modelRows) + '], "result": [' + ",\n".join(resultRows) + '] }'
+                modelCols.append(worksheet.model.get((col, row), ""))
+                resultCols.append(worksheet.results.get((col, row), ""))
+            modelRows.append(modelCols)
+            resultRows.append(resultCols)
+        jsonObject = {
+            "model" : modelRows,
+            "result" : resultRows,
+            "header_code" : worksheet.header_code,
+            "constants_and_formatting" : worksheet.constants_and_formatting,
+            "formulae" : worksheet.formulae
+        }
 
-
+        return json.dumps(jsonObject)
 
 
     def __unicode__(self):

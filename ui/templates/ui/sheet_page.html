@@ -82,6 +82,9 @@
             function on_loaded_json(json) {
                 data = JSON.parse(json);
                 store.loadData(data["result"]);
+                document.getElementById("header_code").value = data["header_code"]
+                document.getElementById("constants_and_formatting").value = data["constants_and_formatting"]
+                document.getElementById("formulae").value = data["formulae"]
             }
 
 
@@ -117,7 +120,7 @@
             <tr>
               <td width="100%">
                 Header code<br/>
-                <textarea rows="3" style="width: 100%">
+                <textarea id="header_code" rows="3" style="width: 100%">
                 </textarea>
               </td>
             </tr>
@@ -131,7 +134,7 @@
             <tr>
               <td>
                 Constants and formatting<br/>
-                <textarea rows="3" style="width: 100%">
+                <textarea id="constants_and_formatting" rows="3" style="width: 100%">
                 </textarea>
               </td>
             </tr>
@@ -145,7 +148,7 @@
             <tr>
               <td>
                 Formulae<br/>
-                <textarea rows="3" style="width: 100%">
+                <textarea id="formulae" rows="3" style="width: 100%">
                 </textarea>
               </td>
             </tr>
