@@ -34,9 +34,14 @@ class Worksheet(object):
 
         formulae = []
         for k, v in expressions:
-            formulae.append("worksheet[%s] = %s" % (k, v[1:]))
+            formula = "worksheet[%s] = %s" % (k, v[1:])
+            try:
+                exec(formula, context)
+                formulae.append(formula)
+            except Exception, e:
+                formulae.append("# Error executing %s\n# %s" % (formula, e))
+                context["worksheet"][k] = "#ERR"
         self.formulae = "\n".join(formulae)
-        exec(self.formulae, context)
 
         self.results = context["worksheet"]
         print "Spreadsheet recalculated, results are %s" % self.results
