@@ -18,14 +18,14 @@ if settings.ENVIRONMENT == "dev":
             r"^$",
             "static.serve",
             {
-                "document_root" : join(settings.TOP_ROOT_DIR, 'dev-html'),
+                "document_root" : join(settings.TOP_ROOT_DIR, 'dev-root-html'),
                 "path" : "index.html"
             }
         ),
         url(
             r"ext-js/(?P<path>.*)/$" ,
             "static.serve",
-            {"document_root": join(settings.TOP_ROOT_DIR, 'ext-js')}
+            {"document_root": join(settings.TOP_ROOT_DIR, "html", 'ext-js')}
         ),
     )
 
