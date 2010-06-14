@@ -11,6 +11,8 @@
     <script type="text/javascript">
         Ext.BLANK_IMAGE_URL = '/ext-js/resources/images/default/s.gif';
 
+        var on_usercode_change = function() {};
+
         Ext.onReady(function(){
 
             var cols = [
@@ -91,6 +93,15 @@
             }
 
 
+            on_usercode_change = function(section) {
+                var request = new XMLHttpRequest();
+                var url = "update?section=" + encodeURIComponent(section) + "&value=" + encodeURIComponent(document.getElementById(section).value);
+                request.open("GET", url, false);
+                request.send();
+                load_sheet_json();
+            }
+
+
             function load_sheet_json() {
                 var request = new XMLHttpRequest();
                 request.open("GET", "json");
@@ -104,15 +115,6 @@
 
             load_sheet_json();
         });
-
-
-        function on_usercode_change(section) {
-            var request = new XMLHttpRequest();
-            var url = "update?section=" + encodeURIComponent(section) + "&value=" + encodeURIComponent(document.getElementById(section).value);
-            request.open("GET", url, false);
-            request.send();
-            load_sheet_json();
-        }
 
 
     </script>
