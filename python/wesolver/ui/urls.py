@@ -10,6 +10,13 @@ urlpatterns = patterns('wesolver.ui.views',
     ),
 
     url(
+        r'^(?P<username>[^/]+)/createsheet/$',
+        'create_sheet',
+        {},
+        name="create-sheet"
+    ),
+
+    url(
         r'^(?P<username>[^/]+)/(?P<sheet_id>\d+)/$',
         'sheet_page',
         {},

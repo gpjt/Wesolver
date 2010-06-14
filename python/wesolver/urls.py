@@ -8,6 +8,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     (r'^admin/', include(admin.site.urls)),
+    (r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'ui/login.html'}),
     (r'^user/', include('wesolver.ui.urls')),
 )
 

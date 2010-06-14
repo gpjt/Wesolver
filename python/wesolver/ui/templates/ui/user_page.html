@@ -1,3 +1,9 @@
+<html>
+<head>
+  <title>wesolver: Details for {{ user.username }}</title>
+</head>
+
+</body>
 <h1>Details for {{ user.username }}</h1>
 
 
@@ -15,3 +21,11 @@
 <p>
 No sheets found.
 {% endif %}
+
+{% if my_page %}
+<p>
+<a href="createsheet">Create a new sheet</a>
+{% endif %}
+
+</body>
+</html>
