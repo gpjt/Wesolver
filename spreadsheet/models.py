@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 
 
 FLOAT_RE = r'(?:[0-9]*\.[0-9]+|[0-9]+\.[0-9]*)'
-CELLREF_RE = r'\$?[A-Za-z]+\$?[1-9][0-9]*'
+CELLREF_RE = r'([A-Za-z])([1-9][0-9]*)'
 
 
 class Worksheet(object):
@@ -21,6 +21,44 @@ class Worksheet(object):
             if row > self.max_row:
                 self.max_row = row
 
+
+    def exec_formula(self, location, expressions, context, formulae, done):
+        if location in done:
+            return
+
+        try:
+            expression = expressions[location][1:]
+        except KeyError:
+            return
+
+        formula = "worksheet[%s] = " % (location, )
+        while True:
+            match = re.match(CELLREF_RE, expression)
+            if not match:
+                break
+
+            formula += expression[:match.start()]
+            dependencyLocation = (ord(match.group(1).upper()) - 64, int(match.group(2)))
+            formula += "worksheet[%s, %s]" % dependencyLocation
+            self.exec_formula(dependencyLocation, expressions, context, formulae, done)
+
+            expression = expression[match.end():]
+        formula += expression
+
+        try:
+            exec(formula, context)
+            formulae.append(formula)
+        except Exception, e:
+            formulae.append("# Error executing %s\n# %s" % (formula, e))
+            context["worksheet"][location] = "#ERR"
+
+        done.add(location)
+
+
+    def walk_formulae(self, expressions, context):
+        return formulae
+
+
     def recalc(self, pre_constants_user_code, pre_formula_user_code, post_formula_user_code):
         context = {}
 
@@ -30,10 +68,10 @@ class Worksheet(object):
         exec(pre_constants_user_code, context)
 
         constants = []
-        expressions = []
+        expressions = {}
         for k, v in self.model.items():
             if v.startswith("="):
-                expressions.append((k, v))
+                expressions[k] = v
             else:
                 if not re.match(FLOAT_RE, v):
                     v = "'%s'" % v
@@ -44,20 +82,14 @@ class Worksheet(object):
         exec(pre_formula_user_code, context)
 
         formulae = []
-        for k, v in expressions:
-            formula = "worksheet[%s] = %s" % (k, v[1:])
-            try:
-                exec(formula, context)
-                formulae.append(formula)
-            except Exception, e:
-                formulae.append("# Error executing %s\n# %s" % (formula, e))
-                context["worksheet"][k] = "#ERR"
+        done = set()
+        for location in expressions:
+            self.exec_formula(location, expressions, context, formulae, done)
         self.formulae = "\n".join(formulae)
 
         exec(post_formula_user_code, context)
 
         self.results = context["worksheet"]
-        print "Spreadsheet recalculated, results are %s" % self.results
 
 
 
