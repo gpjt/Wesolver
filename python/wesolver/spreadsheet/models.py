@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 
 
 FLOAT_RE = r'(?:[0-9]*\.[0-9]+|[0-9]+\.[0-9]*)'
+INT_RE = r'[1-9][0-9]*'
 CELLREF_RE = r'([A-Za-z])([1-9][0-9]*)'
 
 
@@ -76,7 +77,7 @@ class Worksheet(object):
             if v.startswith("="):
                 expressions[k] = v
             else:
-                if not re.match(FLOAT_RE, v):
+                if not re.match(FLOAT_RE, v) and not re.match(INT_RE, v):
                     v = "'%s'" % v
                 constants.append("worksheet[%s] = %s" % (k, v))
         self.constants_and_formatting = "\n".join(constants)
