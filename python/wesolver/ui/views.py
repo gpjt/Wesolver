@@ -51,7 +51,6 @@ def create_sheet(request, username):
 @login_required
 def sheet_page(request, username, sheet_id):
     user, sheet = get_user_sheet(username, sheet_id)
-    print (user == request.user)
     return render_to_response('ui/sheet_page.html', { 'user' : user, 'sheet' : sheet })
 
 @login_required
