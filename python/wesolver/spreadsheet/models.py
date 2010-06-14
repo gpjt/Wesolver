@@ -1,4 +1,7 @@
-import json
+try:
+    import json
+except ImportError:
+    import simplejson as json
 import re
 
 from django.db import models
